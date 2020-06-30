@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etch a Sketch</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <button onclick="reset()">Reset</button>
+    <button onclick="black()">Black</button>
+    <button onclick="random()">Random</button>
+    <button onclick="gradient()">Gradient</button>
+    <div class="container"></div>
+    <script>
+
+        let blackColor = true;
+        let randomColor = false;
+        let gradientColor = false;
+        let colorLight = 250; 
+
+        // Draws the grid
+        function draw(gridNum) {
+            let iterations = gridNum * gridNum;
+            let size = (800 - gridNum * 2) / gridNum;
+
+            const container = document.querySelector('.container');
+            for (let i = 0; i < iterations; i++) {
+                const div = document.createElement('div');
+                div.setAttribute('id', 'grid');
+                div.style.cssText = `width: ${size}px; height: ${size}px`
+                container.appendChild(div);
+            }
+
+            const grid = document.querySelectorAll('#grid');
+            grid.forEach(square => square.addEventListener('pointerover', paint))
+        };
+
+        function black(e) {
+            colorLight = 250;
+            randomColor = false;
+            gradientColor = false;
+            blackColor = true;
+        };
+        
+        function random(e) {
+            colorLight = 250;
+            blackColor = false;
+            gradientColor = false;
+            randomColor = true;
+        };
+
+        function gradient(e) {
+            colorLight = 250;
+            blackColor = false;
+            randomColor = false;
+            gradientColor = true;
+        }
+
+        function color() {
+            let color = [0, 0, 0];
+            if (randomColor) {
+                for (let i = 0; i < 3; i++) {
+                    color[i] = Math.floor(Math.random() * 255)
+                };
+            } else if (gradientColor) {
+                for (let i = 0; i < 3; i++) {
+                    color[i] = colorLight;
+                };
+                colorLight -= 25;
+            }
+            return color.toString();
+        };
+
+        // Paints squrares in black
+        function paint(e) {
+            const square = e.target;
+            console.log(randomColor)
+            // square.classList.add('painted');
+            square.style.backgroundColor = 'rgb(' + color() + ')'; 
+        };
+
+        // Resets the grid
+        function reset() {
+            const grid = document.querySelectorAll('#grid');
+            grid.forEach(square => square.remove());
+            gridNum = prompt("What is the new grid desired size?");
+            colorLight = 250;
+            draw(gridNum);
+        };
+
+
+        draw(16);
+
+
+
+    </script>
+</body>
+</html>
